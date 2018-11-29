@@ -1,0 +1,8 @@
+#!/bin/sh
+
+mkdir -p /squid/logs && chmod 1777 /squid/logs
+
+/usr/lib/squid/ssl_crtd -c -s /squid/ssl_db -M 4MB
+squid -z -f /squid/config/squid.conf
+
+exec squid -NsY -f /squid/config/squid.conf
