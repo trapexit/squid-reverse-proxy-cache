@@ -1,0 +1,10 @@
+#!/bin/sh
+
+/squid/bin/template-expand /squid/config/squid.conf.template > /tmp/squid.conf
+
+mkdir -p /squid/logs && chmod 1777 /squid/logs
+
+/usr/lib/squid/ssl_crtd -c -s /squid/ssl_db -M 4MB
+squid -N -z -f /tmp/squid.conf
+
+exec squid -NsY -f /tmp/squid.conf

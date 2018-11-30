@@ -1,0 +1,22 @@
+http_port ${HTTP_PORT} ssl-bump \
+  cert=/squid/certs/server_crt.pem \
+  key=/squid/certs/server_key.pem \
+  generate-host-certificates=on \
+  dynamic_cert_mem_cache_size=4MB
+sslcrtd_program /usr/lib/squid/ssl_crtd -s /squid/ssl_db -M 4MB
+
+acl step1 at_step SslBump1
+ssl_bump peek step1
+ssl_bump bump all
+
+http_access allow all
+
+cache_dir aufs /squid/cache ${CACHE_SIZE} 16 256
+cache_mem ${CACHE_MEM}
+maximum_object_size ${MAX_OBJECT_SIZE}
+maximum_object_size_in_memory ${MAX_OBJECT_SIZE_IN_MEM}
+cache_replacement_policy heap LFUDA
+range_offset_limit -1
+
+cache_log        stdio:/squid/logs/cache.log
+cache_access_log stdio:/squid/logs/cache_access.log
