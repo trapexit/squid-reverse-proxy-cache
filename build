@@ -1,0 +1,7 @@
+#!/bin/sh
+
+exec docker build \
+     --network none \
+     --no-cache \
+     -t test \
+     .

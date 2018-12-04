@@ -1,5 +1,7 @@
 FROM alpine:3.8
-ENV HTTP_PORT=3128 \
+ENV HTTPS_PORT=443 \
+    TARGET_HOST="localhost" \
+    TARGET_PORT=443 \
     CACHE_SIZE=1024 \
     CACHE_MEM="1 MB" \
     MAX_OBJECT_SIZE="1 GB" \
@@ -12,6 +14,7 @@ COPY apks /tmp/apks
 RUN apk add \
     --no-network \
     --allow-untrusted \
-    /tmp/apks/*
-EXPOSE 3128
-#ENTRYPOINT ["/squid/bin/entrypoint"]
+    /tmp/apks/* && \
+    rm -rf /tmp/apks
+EXPOSE ${HTTPS_PORT}
+ENTRYPOINT ["/squid/bin/entrypoint"]

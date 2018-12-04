@@ -1,0 +1,29 @@
+https_port ${HTTPS_PORT} accel \
+  defaultsite=${TARGET_HOST} \
+  no-vhost \
+  cert=/squid/certs/server_crt.pem \
+  key=/squid/certs/server_key.pem
+
+cache_peer ${TARGET_HOST} parent ${TARGET_PORT} 0 \
+  no-query originserver no-digest \
+  name=upstream login=PASSTHRU ssl sslflags=DONT_VERIFY_PEER
+
+refresh_pattern . 1440 100% 10080 ignore-no-cache ignore-no-store
+
+acl site dstdomain ${TARGET_HOST}
+http_access allow site
+cache_peer_access upstream allow site
+cache_peer_access upstream deny all
+cache allow site
+
+cache_dir aufs /squid/cache ${CACHE_SIZE} 16 256
+cache_mem ${CACHE_MEM}
+maximum_object_size ${MAX_OBJECT_SIZE}
+maximum_object_size_in_memory ${MAX_OBJECT_SIZE_IN_MEM}
+cache_replacement_policy heap LFUDA
+range_offset_limit -1
+
+cache_log        stdio:/squid/logs/cache.log
+cache_access_log stdio:/squid/logs/cache_access.log
+
+include /squid/config/extra_squid.conf
