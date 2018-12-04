@@ -1,0 +1,9 @@
+#!/bin/sh
+
+while true
+do
+    read line
+    echo OK
+    echo "${line}" >> /tmp/helper.log
+done
+exit 0

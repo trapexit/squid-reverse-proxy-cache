@@ -10,8 +10,16 @@ cache_peer ${TARGET_HOST} parent ${TARGET_PORT} 0 \
 
 refresh_pattern . 1440 100% 10080 ignore-no-cache ignore-no-store
 
+external_acl_type ACL_HELPER \
+  ttl=${ACL_CACHE_TTL} \
+  ${EXTERNAL_ACL_FORMAT} \
+  /squid/bin/external_acl_helper
+acl AclHelper external ACL_HELPER
 acl site dstdomain ${TARGET_HOST}
-http_access allow site
+
+http_access allow AclHelper
+http_access deny all
+
 cache_peer_access upstream allow site
 cache_peer_access upstream deny all
 cache allow site

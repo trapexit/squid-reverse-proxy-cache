@@ -5,7 +5,9 @@ ENV HTTPS_PORT=443 \
     CACHE_SIZE=1024 \
     CACHE_MEM="1 MB" \
     MAX_OBJECT_SIZE="1 GB" \
-    MAX_OBJECT_SIZE_IN_MEM="512 KB"
+    MAX_OBJECT_SIZE_IN_MEM="512 KB" \
+    EXTERNAL_ACL_FORMAT="%URI %USER_CERT %USER_CERT_CN" \
+    ACL_CACHE_TTL=1
 RUN mkdir /squid && chmod 1777 /squid
 COPY bin /squid/bin
 COPY config /squid/config
