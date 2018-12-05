@@ -2,8 +2,10 @@
 
 exec docker run \
      --name test \
+     --user $(id -u):$(id -g) \
      -it \
      --rm \
      --network host \
+     -e HTTPS_PORT=4443 \
      -e TARGET_PORT=5000 \
      test:latest
